@@ -1,30 +1,32 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <el-container>
+    <el-aside width="230px"><NavBar/></el-aside>
+    <el-main>
+      <HeaderItem/>
+      <router-view/>
+    </el-main>
+  </el-container>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import HeaderItem from './components/HeaderItem.vue';
+import NavBar from './components/NavBar.vue';
 
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+export default {
+  components: { NavBar, HeaderItem },
+  mounted(){
+    let loading = this.$loading({lock: true})
+    this.$store.dispatch('getWorkers')
+    this.$store.dispatch('getDirections')
+    this.$store.dispatch('getGroups')
+    this.$store.dispatch('getPupils')
+    this.$store.dispatch('getSpendings')
+    this.$store.dispatch('getPayments')
+    loading.close()
   }
 }
+</script>
+
+<style lang="scss">
+@import '@/styles/app.scss';
 </style>
