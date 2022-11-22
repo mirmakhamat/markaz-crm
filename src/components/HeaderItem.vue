@@ -49,7 +49,7 @@ export default {
   data(){
     return {
       search: '',
-      toggle: 0
+      toggle: false
     }
   },
   computed: {
@@ -70,6 +70,13 @@ export default {
         document.documentElement.classList.add('dark')
       else 
         document.documentElement.classList.remove('dark')
+        this.$cookies.set('theme', this.toggle?'dark':'light')
+    }
+  },
+  mounted() {
+    if(this.$cookies.isKey('theme')){
+      this.toggle = this.$cookies.get('theme') == 'dark'
+      this.switchtheme()
     }
   },
 }
