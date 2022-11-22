@@ -2,22 +2,44 @@
   <header class="header">
     <div class="header__left">
       <div class="header__name">
-        Welcome, <span>Alexa A.</span>
+        Welcome, <span>Admin</span>
       </div>
       <div class="header__date">
-        Tue, 07 June 2022
+        {{ date }}
       </div>
     </div>
-    <el-input v-model="search" size="large" placeholder="Type something" class="header__search">
+    <el-input v-model="search" size="large" placeholder="Biror nima yozing..." class="header__search">
       <template #prefix>
         <el-icon class="el-input__icon"><search /></el-icon>
       </template>
     </el-input>
     <div class="header__right">
-      <el-button size="large" circle>
+      <el-switch
+        v-model="toggle"
+        inline-prompt
+        active-icon="Sunny"
+        inactive-icon="Moon"
+        style="--el-switch-on-color: #fff; --el-switch-off-color: #000;"
+        @change="switchtheme"
+      />
+      <el-button size="large" circle @click="jinnilik">
         <el-icon><BellFilled /></el-icon>
       </el-button>
-      <el-avatar shape="square" :size="40"/>
+      <el-dropdown size="large">
+        <el-avatar shape="square" :size="40" :src="require('@/assets/img/img_avatar.png')"/>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="jinnilik">
+              <el-icon><Setting/></el-icon>
+              Sozlamalar
+            </el-dropdown-item>
+            <el-dropdown-item divided @click="jinnilik">
+              <el-icon><SwitchButton /></el-icon>
+              Chiqish
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </header>
 </template>
@@ -26,9 +48,30 @@
 export default {
   data(){
     return {
-      search: ''
+      search: '',
+      toggle: 0
     }
-  }
+  },
+  computed: {
+    date(){
+      let date = new Date()
+      return `${this.$store.getters.weeks[date.getDay() - 1]}, ${date.getDate()}-${this.$store.getters.months[date.getMonth()]} ${date.getFullYear()}`
+    }
+  },
+  methods: {
+    jinnilik(){
+      this.$confirm('Nimadir Bo`lishi keremidi))', 'Xa-xa-xa', {
+        confirmButtonText: 'Ha',
+        cancelButtonText: 'Bilmadm'
+      })
+    },
+    switchtheme(){
+      if (this.toggle)
+        document.documentElement.classList.add('dark')
+      else 
+        document.documentElement.classList.remove('dark')
+    }
+  },
 }
 </script>
 

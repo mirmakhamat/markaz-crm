@@ -71,7 +71,7 @@ const pupil = {
       axios.post(`${context.getters.url}/pupil/save/${payload._id}`, payload)
       .then(res => {
         if(res.status === 200) {
-          context.commit('savepupil', res.data)
+          context.commit('savepupil', payload)
         }
       })
     },
@@ -80,6 +80,11 @@ const pupil = {
       .then(res => {
         if(res.status === 200){
           context.commit('delpupil', payload)
+          context.getters.payments.forEach(item => {
+            if(item.pupil._id == payload){
+              context.dispatch('delPayment', item._id)
+            }
+          })
         }
       })
     }

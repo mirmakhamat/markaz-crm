@@ -62,7 +62,6 @@ const group = {
       axios.post(`${context.getters.url}/group/create`, payload)
       .then(res => {
         if(res.status === 200){
-          res.data.direction = context.getters.directions.find(item => item._id == res.data.direction)
           context.commit('addgroup', res.data)
         }
       })
@@ -71,7 +70,7 @@ const group = {
       axios.post(`${context.getters.url}/group/save/${payload._id}`, payload)
       .then(res => {
         if(res.status === 200) {
-          context.commit('savegroup', res.data)
+          context.commit('savegroup', payload)
         }
       })
     },
@@ -80,6 +79,16 @@ const group = {
       .then(res => {
         if(res.status === 200){
           context.commit('delgroup', payload)
+          context.getters.pupils.forEach(item => {
+            if(item.group._id == payload){
+              context.dispatch('delPupil', item._id)
+            }
+          })
+          context.getters.payments.forEach(item => {
+            if(item.group._id == payload){
+              context.dispatch('delPayment', item._id)
+            }
+          })
         }
       })
     }

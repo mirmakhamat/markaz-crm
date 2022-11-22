@@ -22,6 +22,8 @@
           <el-popconfirm 
             title="Rostdan ham o'chirmoqchimisiz?"
             confirm-button-text="Ha"
+            confirm-button-type="danger"
+            cancel-button-type="primary"
             cancel-button-text="Yo'q"
             @confirm="del(scope.row._id)">
             <template #reference>
@@ -88,7 +90,7 @@ export default {
       return this.$store.getters.who
     },
     groups(){
-      return this.$store.getters.groups
+      return this.$store.getters.groups.filter(item => item.status)
     }
   },
   methods: {
@@ -108,7 +110,7 @@ export default {
       })
     },
     edit(pupil){
-      this.pupil = pupil
+      this.pupil = {...pupil}
       this.editBtn = true
       this.toggle = true
     },

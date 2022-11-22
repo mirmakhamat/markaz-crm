@@ -70,7 +70,7 @@ const worker = {
       axios.post(`${context.getters.url}/worker/save/${payload._id}`, payload)
       .then(res => {
         if(res.status === 200) {
-          context.commit('saveworker', res.data)
+          context.commit('saveworker', payload)
         }
       })
     },
@@ -79,6 +79,11 @@ const worker = {
       .then(res => {
         if(res.status === 200){
           context.commit('delworker', payload)
+          context.getters.groups.forEach(item => {
+            if(item.worker._id == payload){
+              context.dispatch('delGroup', item._id)
+            }
+          })
         }
       })
     }

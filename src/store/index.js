@@ -11,7 +11,9 @@ export default createStore({
   state: {
     url: 'http://localhost:5070',
     status: ['faol emas', 'faol'],
-    who: ['Hisobchi', 'Administrator', 'O`qituvchi', 'Uyam odam']
+    who: ['Hisobchi', 'Administrator', 'O`qituvchi', 'Uyam odam'],
+    months: ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentyabr', 'Oktyabr', 'Noyabr', 'Dekabr'],
+    weeks: ['Du', 'Se', 'Chor', 'Pay', 'Juma', 'Shanba', 'Yak']
   },
   getters: {
     url(state){
@@ -22,6 +24,12 @@ export default createStore({
     },
     who(state){
       return state.who
+    },
+    months(state){
+      return state.months
+    },
+    weeks(state){
+      return state.weeks
     }
   },
   modules: {

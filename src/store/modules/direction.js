@@ -70,7 +70,7 @@ const direction = {
       axios.post(`${context.getters.url}/direction/save/${payload._id}`, payload)
       .then(res => {
         if(res.status === 200) {
-          context.commit('savedirection', res.data)
+          context.commit('savedirection', payload)
         }
       })
     },
@@ -79,6 +79,11 @@ const direction = {
       .then(res => {
         if(res.status === 200){
           context.commit('deldirection', payload)
+          context.getters.groups.forEach(item => {
+            if(item.direction._id == payload){
+              context.dispatch('delGroup', item._id)
+            }
+          })
         }
       })
     }

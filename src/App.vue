@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="230px"><NavBar/></el-aside>
+    <el-aside><NavBar/></el-aside>
     <el-main>
       <HeaderItem/>
       <router-view/>

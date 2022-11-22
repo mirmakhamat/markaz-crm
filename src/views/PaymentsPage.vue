@@ -12,7 +12,11 @@
       <el-table-column type="expand">
         <template #default="props">
           <el-table :data="props.row.historysumma" style="width: 90%; margin: auto" :border="true">
-            <el-table-column prop="summa" label="To'lov summasi"/>
+            <el-table-column label="To'lov summasi">
+              <template #default="scope">
+                {{ scope.row.summa.toLocaleString() }} so'm
+              </template>
+            </el-table-column>
             <el-table-column prop="data" label="To'lov sanasi"/>
             <el-table-column prop="typepayment" label="To'lov turi"/>
             <el-table-column prop="comment" label="Izoh"/>
@@ -34,12 +38,19 @@
       </el-table-column>
       <el-table-column prop="group.title" label="Guruh nomi"/>
       <el-table-column prop="pupil.name" label="O'quvchi ismi"/>
+      <el-table-column label="Jami to'lagan summasi">
+        <template #default="scope">
+          {{ scope.row.allsumma.toLocaleString() }} so'm
+        </template>
+      </el-table-column>
       <el-table-column label="Tahrirlash" width="130px">
         <template #default="scope">
           <el-popconfirm 
             title="Rostdan ham o'chirmoqchimisiz?"
             confirm-button-text="Ha"
             cancel-button-text="Yo'q"
+            confirm-button-type="danger"
+            cancel-button-type="primary"
             @confirm="del(scope.row._id)">
             <template #reference>
               <el-button icon="Delete" circle type="danger"/>
@@ -78,7 +89,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Summa">
-        <el-input-number v-model="payment.summa"/>
+        <el-input v-model="payment.summa" :formatter="formatter"/>
       </el-form-item>
       <el-form-item label="Sana">
         <el-date-picker v-model="payment.data" type="date"/>
@@ -124,11 +135,12 @@ export default {
       return this.$store.getters.pupils.filter(pupil => pupil.group._id == this.payment.group)
     },
     groups(){
-      return this.$store.getters.groups
+      return this.$store.getters.groups.filter(item => item.status)
     }
   },
   methods: {
     add(){
+      this.payment.summa = this.payment.summa.split(' ').join('')*1
       this.$store.dispatch('addPayment', this.payment)
       this.toggle = false
       this.$message({
@@ -144,11 +156,13 @@ export default {
       })
     },
     edit(payment){
-      this.payment = payment
+      this.payment = {...payment}
       this.editBtn = true
       this.toggle = true
     },
     save(){
+      if(typeof this.payment.summa == 'string')
+        this.payment.summa = this.payment.summa.split(' ').join('')*1
       this.$store.dispatch('savePayment', this.payment)
       this.toggle = false
       this.editBtn = false
@@ -163,6 +177,9 @@ export default {
         message: "Muvaffaqiyatli o'chirildi!",
         type: "success"
       })
+    },
+    formatter(str=''){
+        return str.split(' ').join('').replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
   },
 }

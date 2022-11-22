@@ -22,6 +22,8 @@
             title="Rostdan ham o'chirmoqchimisiz?"
             confirm-button-text="Ha"
             cancel-button-text="Yo'q"
+            confirm-button-type="danger"
+            cancel-button-type="primary"
             @confirm="del(scope.row._id)">
             <template #reference>
               <el-button icon="Delete" circle type="danger"/>
@@ -94,7 +96,7 @@ export default {
       })
     },
     edit(direction){
-      this.direction = direction
+      this.direction = {...direction}
       this.editBtn = true
       this.toggle = true
     },

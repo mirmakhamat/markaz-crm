@@ -33,6 +33,8 @@
                         title="Rostdan ham o'chirmoqchimisiz?"
                         confirm-button-text="Ha"
                         cancel-button-text="Yo'q"
+                        confirm-button-type="danger"
+                        cancel-button-type="primary"
                         @confirm="del(scope.row._id)">
                         <template #reference>
                             <el-button icon="Delete" circle type="danger"/>
@@ -54,10 +56,10 @@
                 <el-input v-model="worker.name" />
             </el-form-item>
             <el-form-item label="Hodimning tel. raqami">
-                <el-input v-model="worker.phone" />
+                <el-input v-model="worker.phone" v-maska="'+### (##) ###-##-##'"/>
             </el-form-item>
             <el-form-item label="Hodimning oyligi">
-                <el-input v-model="worker.salary" />
+                <el-input v-model="worker.salary" :formatter="formatter"/>
             </el-form-item>
             <el-form-item label="Hodimning lavozmi">
                 <el-select v-model="worker.who" placeholder="Ro'yhatdan tanlang">
@@ -106,6 +108,7 @@ export default {
     },
     methods: {
         add(){
+            this.worker.salary = this.worker.salary.split(' ').join('')*1
             this.$store.dispatch('addWorker', this.worker)
             this.toggle = false
             this.$message({
@@ -121,11 +124,13 @@ export default {
             })
         },
         edit(worker){
-            this.worker = worker
+            this.worker = {...worker}
             this.editBtn = true
             this.toggle = true
         },
         save(){
+            if(typeof this.worker.salary == 'string')
+                this.worker.salary = this.worker.salary.split(' ').join('')*1
             this.$store.dispatch('saveWorker', this.worker)
             this.toggle = false
             this.editBtn = false
@@ -133,6 +138,9 @@ export default {
                 message: "Muvaffaqiyatli saqlandi!",
                 type: "success"
             })
+        },
+        formatter(str=''){
+            return str.split(' ').join('').replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         }
     },
 }

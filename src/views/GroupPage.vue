@@ -15,11 +15,7 @@
           {{ scope.row.direction.title }}
         </template>
       </el-table-column>
-      <el-table-column label="Xodim">
-        <template #default="scope">
-          {{ getWorker(scope.row.worker) }}
-        </template>
-      </el-table-column>
+      <el-table-column prop="worker.name" label="Xodim"/>
       <el-table-column label="Kurs narxi">
         <template #default="scope">
           {{ scope.row.price.toLocaleString() }} so'm
@@ -37,6 +33,8 @@
             title="Rostdan ham o'chirmoqchimisiz?"
             confirm-button-text="Ha"
             cancel-button-text="Yo'q"
+            confirm-button-type="danger"
+            cancel-button-type="primary"
             @confirm="del(scope.row._id)">
             <template #reference>
               <el-button icon="Delete" circle type="danger"/>
@@ -78,7 +76,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Kurs narxi">
-        <el-input v-model="group.price" />
+        <el-input v-model="group.price" :formatter="formatter"/>
       </el-form-item>
       <el-form-item label="Guruh holati">
         <el-switch v-model="group.status" active-text="Aktiv" inactive-text="Noaktiv" :active-value="1" :inactive-value="0"/>
@@ -115,14 +113,15 @@ export default {
       return this.$store.getters.who
     },
     directions(){
-      return this.$store.getters.directions
+      return this.$store.getters.directions.filter(item => item.status)
     },
     workers(){
-      return this.$store.getters.workers
+      return this.$store.getters.workers.filter(item => item.status)
     },
   },
   methods: {
     add(){
+      this.group.price = this.group.price.split(' ').join('')*1
       this.$store.dispatch('addGroup', this.group)
       this.toggle = false
       this.$message({
@@ -138,11 +137,13 @@ export default {
       })
     },
     edit(group){
-      this.group = group
+      this.group = {...group}
       this.editBtn = true
       this.toggle = true
     },
     save(){
+      if(typeof this.group.price == 'string')
+        this.group.price = this.group.price.split(' ').join('')*1
       this.$store.dispatch('saveGroup', this.group)
       this.toggle = false
       this.editBtn = false
@@ -151,8 +152,8 @@ export default {
         type: "success"
       })
     },
-    getWorker(_id){
-      return this.workers.find(item => item._id == _id).name
+    formatter(str=''){
+        return str.split(' ').join('').replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
   },
 }

@@ -79,7 +79,7 @@ const payment = {
       axios.post(`${context.getters.url}/payment/save/${payload._id}`, payload)
       .then(res => {
         if(res.status === 200) {
-          context.commit('savepayment', res.data)
+          context.commit('savepayment', payload)
         }
       })
     },
